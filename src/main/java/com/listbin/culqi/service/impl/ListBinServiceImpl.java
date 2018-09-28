@@ -1,15 +1,15 @@
 package com.listbin.culqi.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.gson.Gson;
+import com.listbin.culqi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.listbin.culqi.model.InputModel;
-import com.listbin.culqi.model.ResponseModel;
-import com.listbin.culqi.model.ResultBinlistModel;
 import com.listbin.culqi.service.ListBinService;
 import com.listbin.culqi.util.Constants;
 
@@ -52,4 +52,33 @@ public class ListBinServiceImpl implements ListBinService{
 		return token;
 	}
 
+	public ResponseValidModel getValidService(InputValidMOdel inputValidMOdel){
+		ResponseValidModel responseValidModel;
+
+		RestTemplate restTemplate = new RestTemplate();
+
+
+		Gson gson = new Gson();
+		restTemplate.put(Constants.END_POINT_VALIDATE, null,inputValidMOdel.getApi_key());
+
+
+		responseValidModel= restTemplate.getForObject(
+				Constants.END_POINT_VALIDATE, ResponseValidModel.class);
+
+		return responseValidModel;
+	}
+
+	public Boolean getValidarRespuesta(String cadena){
+
+		ArrayList<String> arrayList = new ArrayList<>();
+
+		Boolean flag = false;
+		for (String array: arrayList) {
+			if (array.equals(cadena)){
+				flag = true;
+			}
+		}
+
+		return flag;
+	}
 }
