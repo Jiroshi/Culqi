@@ -18,18 +18,17 @@ public class BinListController {
 	private ListBinService listBinService;
 	
 	@RequestMapping(value = "/tokens", method = RequestMethod.POST)
-	public ResponseEntity<ResponseModel> getServiceJson(@RequestBody InputModel inputModel, @RequestHeader InputValidMOdel inputValidMOdel) throws Exception
+	public ResponseEntity<ResponseModel> getServiceJson(@RequestBody InputModel inputModel, @RequestHeader String api_key) throws Exception
 	{
 		ResponseModel responseModel = new ResponseModel();
 		ResponseValidModel responseValidModel = new ResponseValidModel();
 		
-		if (inputValidMOdel.getApi_key().trim().equals("") || inputValidMOdel.getApi_key().equals(null)){
+		if (api_key.substring(1, api_key.length()-1).trim().equals("")){
 			return new ResponseEntity<ResponseModel>(responseModel, HttpStatus.UNAUTHORIZED);
 		}else {
-			responseValidModel = listBinService.getValidService(inputValidMOdel);
+			responseValidModel = listBinService.getValidService(api_key);
 		}
-
-		Boolean flag = listBinService.getValidarRespuesta(responseValidModel.getValid());
+			
 
 		responseModel = listBinService.getBrandResponse(inputModel);
 		

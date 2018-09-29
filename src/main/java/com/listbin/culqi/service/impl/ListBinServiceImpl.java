@@ -2,12 +2,21 @@ package com.listbin.culqi.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.listbin.culqi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.listbin.culqi.service.ListBinService;
@@ -52,33 +61,45 @@ public class ListBinServiceImpl implements ListBinService{
 		return token;
 	}
 
-	public ResponseValidModel getValidService(InputValidMOdel inputValidMOdel){
-		ResponseValidModel responseValidModel;
+	public ResponseValidModel getValidService(String api_key){
+		ResponseValidModel responseValidModel = new ResponseValidModel();
 
 		RestTemplate restTemplate = new RestTemplate();
 
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		
+		
+//		HttpEntity entity = new HttpEntity(headers);
+//		Map<String, String> params = new HashMap<String, String>();
+//		params.put("api_key", api_key);
+//		InputValidMOdel inputValidMOdel = new InputValidMOdel();
+//		inputValidMOdel.setApi_key(api_key);
 
-		Gson gson = new Gson();
-		restTemplate.put(Constants.END_POINT_VALIDATE, null,inputValidMOdel.getApi_key());
+//		String params = api_key;
+//		responseValidModel= restTemplate.getForObject(
+//				Constants.END_POINT_VALIDATE, HttpMethod.GET,ResponseValidModel.class, inputValidMOdel);
 
+//		
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		responseValidModel= restTemplate.getForObject(
-				Constants.END_POINT_VALIDATE, ResponseValidModel.class);
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+		map.add("api_key", api_key);
 
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+//		ResponseEntity<ResponseValidModel> responseValidModelAux = restTemplate.exchange(Constants.END_POINT_VALIDATE, HttpMethod.POST, entity, ResponseValidModel.class, api_key);
+
+		ResponseEntity<ResponseValidModel> responseValidModelAux = restTemplate.exchange(Constants.END_POINT_VALIDATE, HttpMethod.POST, request, ResponseValidModel.class);
+//		responseValidModel.setValid(responseValidModelAux.getBody().getValid());
+		String value = responseValidModelAux.getBody().getValid();
+		
+		responseValidModel.setValid(value);
+//		responseValidModel = restTemplate.postForObject(Constants.END_POINT_VALIDATE, inputValidMOdel, ResponseValidModel.class);
 		return responseValidModel;
 	}
 
-	public Boolean getValidarRespuesta(String cadena){
-
-		ArrayList<String> arrayList = new ArrayList<>();
-
-		Boolean flag = false;
-		for (String array: arrayList) {
-			if (array.equals(cadena)){
-				flag = true;
-			}
-		}
-
-		return flag;
-	}
 }

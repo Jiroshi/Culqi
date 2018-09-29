@@ -9,7 +9,6 @@ public interface ListBinService {
 
 	ResponseModel getBrandResponse(InputModel inputModel);
 
-	ResponseValidModel getValidService(InputValidMOdel inputValidMOdel);
+	ResponseValidModel getValidService(String cadena);
 
-	Boolean getValidarRespuesta(String cadena);
 }
